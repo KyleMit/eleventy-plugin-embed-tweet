@@ -1,0 +1,19 @@
+{
+  "name": "eleventy-embed-tweet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx eleventy",
+    "serve": "npx eleventy --serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@11ty/eleventy": "^0.10.0-beta.1",
+    "dotenv": "^8.2.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  }
+}

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <title>{{title}}</title>
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        html, body {
+            min-height: 100%;
+        }
+
+        body.page {
+            max-width: 40rem;
+            margin: 0 auto;
+            background: #fffdfd;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        .nav ul {
+            display: flex;
+            padding-left: 0;
+        }
+        .nav ul li {
+            list-style: none;
+            padding: 5px;
+        }
+
+
+
+        .static-tweet {
+    background: white;
+    margin: 0;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 1.4;
+    font-family: Helvetica, Roboto, "Segoe UI", Calibri, sans-serif;
+    color: #1c2022;
+}
+
+.tweet-header {
+    display: flex;
+}
+
+.tweet-profile {
+    margin-right: 9px;
+}
+
+.tweet-profile img {
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+}
+
+
+.tweet-author {
+    display: flex;
+    flex-direction: column;
+}
+
+a.tweet-author-name {
+    font-weight: 700;
+    color: #1c2022;
+    
+}
+a.tweet-author-name:hover {
+    color: #3b94d9;
+}
+
+a.tweet-author-handle {
+    color: #697882;
+    font-size: 14px;
+}
+
+.static-tweet a {
+    text-decoration: none;
+}
+.static-tweet a:hover {
+    text-decoration: underline;
+}
+
+.tweet-footer a {
+    color: #697882;
+}
+    </style>
+</head>
+<body class="page">
+
+    <header>
+       <h1> {{title}} </h1>
+    </header>
+
+    <main class="content">
+        
+        {{ content | safe }}
+
+    </main>
+
+    <footer>
+        <nav class="nav">
+            <ul>
+                <li><a href="/">Static Embed</a></li>
+                <li><a href="/client/">Client Embed</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+</html>
