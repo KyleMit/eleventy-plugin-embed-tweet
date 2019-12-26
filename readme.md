@@ -1,3 +1,9 @@
+---
+layout: default-layout.njk
+title: "Eleventy Embedded Tweet"
+permalink: "/"
+---
+
 # Embedding Tweets
 
 Static site generators work hard to bake in performance and do as much work ahead of time as possible.
