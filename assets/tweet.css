@@ -80,6 +80,10 @@ a.tweet-date:hover {
     color: #2b7bb9;
 }
 
+.tweet-bird {
+    margin-left: 20px;
+}
+
 .tweet-bird-icon,
 .tweet-heart-icon {
     display: inline-block;

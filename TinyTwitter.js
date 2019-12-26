@@ -86,7 +86,7 @@ function buildTweet(tweet) {
         `<blockquote class="static-tweet">
   <div class="tweet-header">
     <a class="tweet-profile" href="https://twitter.com/${tweet.user.screen_name}" >
-      <img src="${tweet.user.profile_image_url_https}" />
+      <img src="${tweet.user.profile_image_url_https}" alt="Avatar for ${tweet.user.screen_name}" />
     </a>
     <div class="tweet-author">
       <a class="tweet-author-name" href="https://twitter.com/${tweet.user.screen_name}" >${tweet.user.name}</a>
