@@ -27,7 +27,7 @@ async function getTweet(tweetId, handle, text, date) {
     // if we have env variables, go get tweet
     if (process.env.TOKEN && process.env.TOKEN_SECRET && process.env.CONSUMER_KEY && process.env.CONSUMER_SECRET) {
         // fetch tweet
-        let apiURI = `https://api.twitter.com/1.1/statuses/show/${tweetId}.json`
+        let apiURI = `https://api.twitter.com/1.1/statuses/show/${tweetId}.json?tweet_mode=extended`
         let oAuth = {
             token: process.env.TOKEN,
             token_secret: process.env.TOKEN_SECRET,
@@ -77,13 +77,10 @@ async function getTweet(tweetId, handle, text, date) {
 }
 
 function buildTweet(tweet) {
-    let moment = require("moment");
 
-    let htmlText = tweet.text
+    let { body, images } = getTweetContents(tweet)
 
-    let dateMoment = moment(tweet.created_at, "ddd MMM D hh:mm:ss Z YYYY");
-    let dateDisplay = dateMoment.format("hh:mm A · MMM D, YYYY")
-    let dateMeta = dateMoment.utc().format("MMM D, YYYY hh:mm:ss (z)")
+    let { dateDisplay, dateMeta } = getTweetDates(tweet)
 
     let htmlTweet =
         `<blockquote class="static-tweet">
@@ -99,10 +96,12 @@ function buildTweet(tweet) {
       <div class="tweet-bird-icon" aria-label="View on Twitter" title="View on Twitter" role="presentation"></div>
     </a>
   </div>
-  <p class="tweet-body">${htmlText}</p>
+  <p class="tweet-body">${body}</p>
+  <div class="tweet-images">${images.map(url => `<img alt='Image from Tweet' src='${url}' />`).join('')}</div>
   <div class="tweet-footer">
     <a class="tweet-heart" href="https://twitter.com/intent/like?tweet_id=${tweet.id_str}">
       <div class="tweet-heart-icon" aria-label="Like" title="Like" role="img"></div>
+      <span class="tweet-favorite-count">${tweet.favorite_count}</span>
     </a>
     <a class="tweet-date" href="https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}" title="Time Posted: ${dateMeta}">
       ${dateDisplay}
@@ -111,4 +110,83 @@ function buildTweet(tweet) {
 </blockquote>`
 
     return htmlTweet
+}
+
+function getTweetContents(tweet) {
+    let htmlText = tweet.full_text
+
+    let replacements = []
+    let images = []
+
+    // hashtags
+    for (hashtag of tweet.entities.hashtags) {
+        let { startPos, endPos, len } = getIndexPos(hashtag.indices)
+
+        let oldText = htmlText.substr(startPos, len)
+        let newText = `<a href="https://twitter.com/${oldText}">${oldText}</a>`
+
+        replacements.push({ oldText, newText })
+    }
+
+    // users
+    for (user of tweet.entities.user_mentions) {
+        let { startPos, endPos, len } = getIndexPos(user.indices)
+
+        let oldText = htmlText.substr(startPos, len)
+        let newText = `<a href="https://twitter.com/hashtag/${user.screen_name}">${oldText}</a>`
+
+        replacements.push({ oldText, newText })
+    }
+
+    // urls
+    for (url of tweet.entities.urls) {
+        let { startPos, endPos, len } = getIndexPos(url.indices)
+
+        let oldText = htmlText.substr(startPos, len)
+        let newText = `<a href="${url.expanded_url}">${url.expanded_url.replace(/https?:\/\//,"")}</a>`
+
+        replacements.push({ oldText, newText })
+    }
+
+    // media
+    for (media of tweet.entities.media) {
+        let { startPos, endPos, len } = getIndexPos(media.indices)
+
+        let oldText = htmlText.substr(startPos, len)
+        let newText = `` // get rid of img url in tweet text
+
+        replacements.push({ oldText, newText })
+        images.push(media.media_url_https)
+    }
+
+    // make updates at the end
+    for (rep of replacements) {
+        htmlText = htmlText.replace(rep.oldText, rep.newText)
+    }
+
+    return { body: htmlText, images }
+}
+
+function getIndexPos(indices) {
+
+    let startPos = indices[0];
+    let endPos = indices[1];
+    let len = endPos - startPos
+
+    return {
+        startPos,
+        endPos,
+        len
+    }
+}
+
+function getTweetDates(tweet) {
+    let moment = require("moment");
+
+    let dateMoment = moment(tweet.created_at, "ddd MMM D hh:mm:ss Z YYYY");
+
+    let dateDisplay = dateMoment.format("hh:mm A · MMM D, YYYY")
+    let dateMeta = dateMoment.utc().format("MMM D, YYYY hh:mm:ss (z)")
+
+    return { dateDisplay, dateMeta }
 }

@@ -5,4 +5,4 @@ title: "Static Embedded Tweet"
 
 Here's an example of an embedded tweet
 
-{% tweet "1188837207206977536" %}
+{% tweet "1178131422407745537" %}

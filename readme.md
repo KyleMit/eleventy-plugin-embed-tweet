@@ -4,7 +4,9 @@ title: "Eleventy Embedded Tweet"
 permalink: "/"
 ---
 
-# Embedding Tweets
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f851427d-8792-4f86-837c-12ccb48c44fd/deploy-status)](https://app.netlify.com/sites/eleventy-embed-tweet/deploys)
+
+## Problem
 
 Static site generators work hard to bake in performance and do as much work ahead of time as possible.
 
@@ -39,7 +41,7 @@ And performs like this:
 At it's simplest, you should just be able to drop in this nunjucks shortcode with a tweet ID which will deliver all the necessary html to embed (must be passed as a string because long numbers will truncate)
 
 ```js
-{% tweet "1188837207206977536" %}
+{% raw %}{% tweet "1188837207206977536" %}{% endraw %}
 ```
 
 Which is exposed in the config like this:
@@ -59,6 +61,12 @@ CONSUMER_KEY=********
 CONSUMER_SECRET=********
 ```
 
+## Todo
+
+* [ ] Destructure API JSON before caching - only store info we care about
+* [ ] Much better docs
+* [ ] Figure out more consistent CSS structure
+* [ ] Cache profile and media images
 
 ## Resources
 
@@ -67,6 +75,8 @@ CONSUMER_SECRET=********
 * [Allow shortcodes to return promises #429](https://github.com/11ty/eleventy/issues/429)
 * [Nunjucks Asynchronous Shortcodes](https://www.11ty.dev/docs/languages/nunjucks/#asynchronous-shortcodes)
 * [Ignore Directory](https://www.11ty.dev/docs/ignores/)
+* [Escape curly brackets in nunjucks](https://github.com/mozilla/nunjucks/issues/604)
+* [Escape curly brackets in nunjucks](https://github.com/mozilla/nunjucks/issues/388)
 
 ## Twitter API
 
@@ -81,6 +91,7 @@ CONSUMER_SECRET=********
 
 * [Can I fetch the tweet from Twitter if I know the tweet's id?](https://stackoverflow.com/q/897107/1366033)
 * [Search for tweets with t.co rewritten links](https://stackoverflow.com/q/7561016/1366033)
+* [Twitter api text field value is truncated](https://stackoverflow.com/a/40454382/1366033)
 
 ### OAuth
 

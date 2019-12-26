@@ -16,12 +16,21 @@
     border-color: #ccd6dd;
 }
 
+.static-tweet a {
+    color: #2b7bb9;
+}
+
+.static-tweet a:hover {
+    color: #3b94d9;
+}
+
 .tweet-header {
     display: flex;
 }
 
 .tweet-profile {
     margin-right: 9px;
+    flex-shrink: 0;
 }
 
 .tweet-profile img {
@@ -33,7 +42,7 @@
 .tweet-author {
     display: flex;
     flex-direction: column;
-    flex: 1 1 auto;
+    flex-grow: 1;
 }
 
 a.tweet-author-name {
@@ -62,12 +71,12 @@ a.tweet-author-handle {
     align-content: center;
 }
 
-.tweet-date {
+a.tweet-date {
     color: #697882;
     font-size: 14px;
 }
 
-.tweet-date:hover {
+a.tweet-date:hover {
     color: #2b7bb9;
 }
 
@@ -92,6 +101,12 @@ a.tweet-author-handle {
 .tweet-heart {
     margin-right: 15px;
     font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.tweet-favorite-count {
+    margin-left: 4px;
 }
 
 .tweet-heart-icon {
@@ -101,6 +116,11 @@ a.tweet-author-handle {
 
 .tweet-heart:hover .tweet-heart-icon {
     filter: none;
+}
+
+.tweet-images img {
+    max-width: 100%;
+    border-radius: 4px;
 }
 
 

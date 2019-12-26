@@ -1,3 +1,9 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
 html {
     height: 100%;
 }
@@ -13,10 +19,17 @@ body.page {
     background: #fffdfd;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    grid-template-columns: 50rem;
+    grid-template-columns: minmax(100%, 50rem);
+    /* minmax(auto, 50rem); */
     line-height: 1.3;
     font-size: 16px;
     padding: 0 15px;
+}
+
+header,
+main,
+footer {
+    max-width: calc(100vw - 30px);
 }
 
 img {
