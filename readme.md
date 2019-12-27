@@ -1,40 +1,7 @@
----
-layout: default-layout.njk
-title: "Eleventy Embedded Tweet"
-permalink: "/"
----
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/f851427d-8792-4f86-837c-12ccb48c44fd/deploy-status)](https://app.netlify.com/sites/eleventy-embed-tweet/deploys)
+## Note
 
-## Problem
-
-Static site generators work hard to bake in performance and do as much work ahead of time as possible.
-
-Which is why it's a bummer that the official way to embed tweets is to use the [publish.twitter.com](https://publish.twitter.com/#) which looks like this:
-
-```html
-<blockquote class="twitter-tweet">
-  <p lang="en" dir="ltr">
-    Nobody:<br><br>
-    Software Marketing Page: &quot;Blazingly Fast&quot;
-  </p>
-  &mdash; Kyle Mitofsky (@KyleMitBTV) 
-  <a href="https://twitter.com/KyleMitBTV/status/1188837207206977536">October 28, 2019</a>
-</blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-```
-
-And performs like this:
-
-![twitter network traffic](https://i.imgur.com/4SFqs4P.png)
-
-## Goals
-
-* Avoid client side API calls
-* Minimize repetitive server side API calls
-* Cache assets and API data so project can build offline
-* Leverage free (personal) twitter API tier on build server
-* Provide fallback for local development for distributed devs who want to run without adding credentials
+Requires signing up for free [twitter developer account](https://developer.twitter.com/en/apply-for-access) - see more about [signing up for twitter credentials below][#TwitterAPI]
 
 ## Usage
 
@@ -44,11 +11,15 @@ At it's simplest, you should just be able to drop in this nunjucks shortcode wit
 {% raw %}{% tweet "1188837207206977536" %}{% endraw %}
 ```
 
-Which is exposed in the config like this:
 
-```js
-eleventyConfig.addShortcode("tweet", tweetId => getTweet(tweetId));
-```
+## Goals
+
+* Avoid client side API calls
+* Minimize repetitive server side API calls
+* Cache assets and API data so project can build offline
+* Leverage free (personal) twitter API tier on build server
+* Provide fallback for local development for distributed devs who want to run without adding credentials
+
 
 ## Setting .ENV variables
 

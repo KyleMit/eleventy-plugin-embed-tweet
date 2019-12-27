@@ -3,19 +3,33 @@ const request = require('request-promise')
 const { promises: fs } = require("fs");
 
 module.exports = {
-    getTweet
+    getTweet,
+    getStyles
 }
 
-async function getTweet(tweetId, handle, text, date) {
+async function getStyles() {
+    // get module directory
+    let path = require("path")
+    let moduleDir = path.parse(__filename).dir
+    let stylePath = path.join(moduleDir, "/tweet.css")
+
+    let styles = await fs.readFile(stylePath)
+    return styles
+}
+
+async function getTweet(tweetId, options) {
 
     let cachedTweets = []
-    try {
-        let file = await fs.readFile("./cache/tweets.json")
-        cachedTweets = JSON.parse(file) || []
-    } catch (error) {
-        // otherwise, empty array is fine
-        console.log(error)
+    if (options.cachePath) {
+        try {
+            let file = await fs.readFile("./cache/tweets.json")
+            cachedTweets = JSON.parse(file) || []
+        } catch (error) {
+            // otherwise, empty array is fine
+            console.log(error)
+        }
     }
+    
 
     let cachedTweet = cachedTweets.find(t => t.id_str === tweetId)
 
@@ -39,10 +53,16 @@ async function getTweet(tweetId, handle, text, date) {
             let liveTweet = JSON.parse(resp)
 
             // cache tweet
-            cachedTweets.push(liveTweet)
-            let tweetsJSON = JSON.stringify(cachedTweets, 2, 2)
-            await fs.writeFile("./cache/tweets.json", tweetsJSON)
-
+            if (options.cachePath) {
+                try {
+                    cachedTweets.push(liveTweet)
+                    let tweetsJSON = JSON.stringify(cachedTweets, 2, 2)
+                    await fs.writeFile("./cache/tweets.json", tweetsJSON)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+           
             // build
             return buildTweet(liveTweet)
 
@@ -52,18 +72,6 @@ async function getTweet(tweetId, handle, text, date) {
         }
 
 
-    }
-
-    // see if we have text fallback
-    if (handle && text && date) {
-        var htmlTweet =
-            `<blockquote class="twitter-tweet">
-            ${text}
-            <a href="https://twitter.com/${handle}/status/${tweetId}">${date}</a>
-        </blockquote>
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
-
-        return htmlTweet
     }
 
     // finally fallback to client-side injection

@@ -1,15 +1,16 @@
 var twitter = require("./TinyTwitter")
 
-module.exports = function(eleventyConfig) {
+module.exports = function(eleventyConfig, options = {}) {
 
-    eleventyConfig.addPassthroughCopy("assets");
-    eleventyConfig.addPassthroughCopy("favicon.ico");
+    eleventyConfig.addNunjucksFilter("Cow", x => "Moooo");
 
-    eleventyConfig.addNunjucksAsyncShortcode("tweet", async(tweetId, handle, text, date) => {
-        return await twitter.getTweet(tweetId, handle, text, date)
+    // added in 0.9.1
+    eleventyConfig.addNunjucksAsyncShortcode("tweet", async(tweetId) => {
+        return await twitter.getTweet(tweetId, options)
     });
 
-    return {
-        markdownTemplateEngine: "njk",
-    };
+    eleventyConfig.addNunjucksAsyncShortcode("tweetStyles", async() => {
+        return await twitter.getStyles()
+    });
+
 };

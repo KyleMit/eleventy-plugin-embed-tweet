@@ -1,17 +1,35 @@
 {
-  "name": "eleventy-embed-tweet",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "npx eleventy",
-    "serve": "npx eleventy --serve"
+  "name": "eleventy-plugin-embed-tweet",
+  "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "A plugin for embedding tweets on the server side during build time",
+  "main": ".eleventy.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleMit/eleventy-plugin-embed-tweet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KyleMit/eleventy-plugin-embed-tweet/issues"
+  },
+  "homepage": "https://github.com/KyleMit/eleventy-plugin-embed-tweet#readme",
+  "keywords": [
+    "eleventy",
+    "eleventy-plugin",
+    "twitter"
+  ],
+  "author": {
+    "name": "Kyle Mitofsky",
+    "email": "kylemit@gmail.com",
+    "url": "http://kylemit.dev/"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@11ty/eleventy": ">=0.9.1"
+  },
   "dependencies": {
-    "@11ty/eleventy": "^0.10.0-beta.1",
     "dotenv": "^8.2.0",
     "moment": "^2.23.0",
     "request": "^2.88.0",
