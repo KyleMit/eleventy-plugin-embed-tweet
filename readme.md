@@ -1,5 +1,5 @@
 
-## Install
+## Installation
 
 Install [on npm](https://www.npmjs.com/package/eleventy-plugin-embed-tweet)
 
@@ -7,13 +7,28 @@ Install [on npm](https://www.npmjs.com/package/eleventy-plugin-embed-tweet)
 npm install eleventy-plugin-embed-tweet --save
 ```
 
-## Note
+Add the following to your .`eleventy.js` config - see docs for options param:
 
-Requires signing up for free [twitter developer account](https://developer.twitter.com/en/apply-for-access)
+```js
+module.exports = function(eleventyConfig) {
 
-## Usage
+    const pluginEmbedTweet = require("eleventy-plugin-embed-tweet")
+    eleventyConfig.addPlugin(pluginEmbedTweet);
+
+};
+```
+
+## Requirements
+
+Requires signing up for free [twitter developer API account](https://developer.twitter.com/en/apply-for-access) - see docs for walkthrough
+
+This plugin relies on making live API calls during build by using async shortcodes which were added in [**Eleventy v0.10.0**](https://github.com/11ty/eleventy/releases/tag/v0.10.0-beta.1) so it's listed as a peer dependency
+
+## Basic Usage
 
 Embed a tweet anywhere you can use nunjucks templates using a shortcode with the tweet id like this:
+
+### Nunjucks
 
 ```js
 {% tweet "1188837207206977536" %}
@@ -21,7 +36,7 @@ Embed a tweet anywhere you can use nunjucks templates using a shortcode with the
 
 > **Note**: ID must be passed as a string because [long numbers will truncate in JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER))
 
-### Demo
+## Demo
 
 Demo project available on github at [KyleMit/eleventy-plugin-embed-tweet-demo](https://github.com/KyleMit/eleventy-plugin-embed-tweet-demo) and live version hosted on [eleventy-embed-tweet.netlify.com/](https://eleventy-embed-tweet.netlify.com/)
 
@@ -33,8 +48,20 @@ Demo project available on github at [KyleMit/eleventy-plugin-embed-tweet-demo](h
 * Leverage free (personal) twitter API tier on build server
 * Provide fallback for local development for distributed devs who want to run without adding credentials
 
+## Todo
 
-## Setting .ENV variables
+* [ ] Destructure API JSON before caching - only store info we care about
+* [ ] Cache profile and media images
+* [ ] Much better docs
+* [ ] Figure out more consistent CSS structure
+* [ ] Handle `<br>` elements
+* [ ] Automate `npm publish`
+
+## Docs
+
+### Setting up Twitter Account
+
+### Setting .ENV variables
 
 Once you sign up for a twitter account, you'll need to create a file named `.env` at the project root - it contains keys so it's excluded by the `.gitignore` so each person will have to manually create their own:
 
@@ -45,13 +72,87 @@ CONSUMER_KEY=********
 CONSUMER_SECRET=********
 ```
 
-You'll also have to add the environment variables on your build server
+Remember to update your `.gitignore` with `.env` so you don't commit your secrets
 
-## Todo
+You'll also have to add the environment variables on your build server.
 
-* [ ] Destructure API JSON before caching - only store info we care about
-* [ ] Cache profile and media images
-* [ ] Much better docs
-* [ ] Figure out more consistent CSS structure
-* [ ] Handle `<br>` elements
-* [ ] Automate `npm publish`
+If you build without setting environment variables, the API call won't work, so the plugin will fallback to using the client side embed available from [publish.twitter.com](https://publish.twitter.com/#)
+
+### Plugin Options
+
+```js
+let pluginEmbedTweet = require("eleventy-plugin-embed-tweet")
+
+let tweetEmbedOptions = {
+    cacheDirectory: '',    // default: ''
+    useInlineStyles: true  // default: true
+}
+
+eleventyConfig.addPlugin(pluginEmbedTweet, tweetEmbedOptions);
+```
+
+#### `useInlineStyles`
+
+By default the single embed will contain all the necessary html and css to render each tweet.  This occurs by including a `<style>` block along with the tweet.  If you're embedding multiple tweets per page, you may elect to separate the CSS into it's own area so it's not repeated multiple times
+
+You can instantiate the plugin like this:
+
+```js
+eleventyConfig.addPlugin(pluginEmbedTweet, {useInlineStyles: false});
+```
+
+And then make sure to include the styles somewhere else on your page like this:
+
+```html
+<style type="text/css">{% tweetStyles %}</style>
+```
+
+**Feel free to also add your own styles** and customize however you'd like.  The official twitter widget is implemented as a web component and [makes styling through the shadow dom really tricky](https://stackoverflow.com/a/59493027/1366033) - but this sits as flat html on your page - so customize however you'd like
+
+The rough structure of the html returned by this plugin looks like this:
+
+```css
+.tweet-card
+    .tweet-header
+        .tweet-profile
+        .tweet-author
+            .tweet-author-name
+            .tweet-author-handle
+        .tweet-bird
+            .tweet-bird-icon
+    .tweet-body
+    .tweet-images
+    .tweet-footer
+        .tweet-like
+            .tweet-like-icon.tweet-icon
+            .tweet-like-count
+        .tweet-date
+```
+
+#### `cacheDirectory`
+
+Relying on an external, authenticated API to build your site has some tradeoffs:
+
+* Build will fail if API is down (fire at twitter)
+* Build will fail if you're offline (on a train)
+* People who clone the repo will need to sign up for their own API keys in order to do a full build
+* Increases build times with multiple repetitive calls (especially during debugging)
+* Increases reliance on API over long term
+
+To address these tradeoffs, this plugin can cache API calls locally which you can periodically commit to your repository.
+
+To enable, you need to pass a cacheDirctory path relative to your project root where you'd like to have data saved:
+
+```js
+eleventyConfig.addPlugin(pluginEmbedTweet, {cacheDirectory: './tweets'});
+```
+
+Because this directory will be updated during build time, you must add a [`.eleventyignore`](https://www.11ty.dev/docs/ignores/) with the directories name, otherwise `eleventy --serve` can get stuck in an infinite loop when it detects changes and tries to rebuild the site during the build.
+
+**File**: `.eleventyignore`
+
+```bash
+tweets/
+```
+
+I'd recommend periodically committing this file - the data should be largely unchanged as long as you've captured a new tweet, but the `favorites_count` may want to get refreshed over time.

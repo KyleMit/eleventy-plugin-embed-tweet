@@ -1,4 +1,4 @@
-<blockquote class="static-tweet">
+<blockquote class="tweet-card">
     <div class="tweet-header">
         <a class="tweet-profile" href="https://twitter.com/{{user.screen_name}}">
             <img src="{{user.profile_image_url_https}}" alt="Avatar for {{user.screen_name}}"/>
@@ -16,20 +16,24 @@
                  aria-label="View on Twitter" title="View on Twitter" ></div>
         </a>
     </div>
-    <p class="tweet-body">{{body}}</p>
+    <p class="tweet-body">
+        {{htmlText | safe}}
+    </p>
     <div class="tweet-images">
         {% for img in images %}
             <img alt='Image from Tweet' src='{{img}}' />
         {% endfor %}
     </div>
     <div class="tweet-footer">
-        <a class="tweet-heart" href="https://twitter.com/intent/like?tweet_id={{id_str}}">
-            <div class="tweet-heart-icon" aria-label="Like" title="Like" role="img"></div>
-            <span class="tweet-favorite-count">{{favorite_count}}</span>
+        <a class="tweet-like" href="https://twitter.com/intent/like?tweet_id={{id_str}}">
+            <div class="tweet-like-icon" aria-label="Like" title="Like" role="img"></div>
+            <span class="tweet-like-count">
+                {% if favorite_count %}{{favorite_count}}{% endif %}
+            </span>
         </a>
-        <a class="tweet-date" title="Time Posted: {{dateMeta}}"
+        <a class="tweet-date" title="Time Posted: {{created_at.meta}}"
            href="https://twitter.com/{{user.screen_name}}/status/{{id_str}}">
-            {{dateDisplay}}
+            {{created_at.display}}
         </a>
     </div>
 </blockquote>
