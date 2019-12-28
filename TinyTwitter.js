@@ -13,7 +13,7 @@ async function getStyles() {
     let moduleDir = path.parse(__filename).dir
     let stylePath = path.join(moduleDir, "/tweet.css")
 
-    let styles = await fs.readFile(stylePath)
+    let styles = await fs.readFile(stylePath, "utf8")
     
     return styles
 }
