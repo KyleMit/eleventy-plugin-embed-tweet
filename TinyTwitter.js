@@ -14,13 +14,30 @@ async function getStyles() {
     let stylePath = path.join(moduleDir, "/tweet.css")
 
     let styles = await fs.readFile(stylePath)
-    return styles
+
+    let styleTag = `<style type='text/css'>${styles}</style>`
+
+    // minify before returning
+    let minStyles = minHtml(styleTag)
+    
+    return minStyles
+}
+
+
+function minHtml(htmlSource) {
+    var minify = require('html-minifier').minify;
+    var result = minify(htmlSource, {
+        minifyCSS: true,
+        collapseWhitespace: true
+    });
+
+    return result;
 }
 
 async function getTweet(tweetId, options) {
 
     let cachedTweets = []
-    if (options.cachePath) {
+    if (options.cacheDirectory) {
         try {
             let file = await fs.readFile("./cache/tweets.json")
             cachedTweets = JSON.parse(file) || []
@@ -35,7 +52,7 @@ async function getTweet(tweetId, options) {
 
     // if we have a cached tweet, use that
     if (cachedTweet && !process.env.CACHE_BUST) {
-        return buildTweet(cachedTweet)
+        return buildTweet(cachedTweet, options)
     }
 
     // if we have env variables, go get tweet
@@ -53,7 +70,7 @@ async function getTweet(tweetId, options) {
             let liveTweet = JSON.parse(resp)
 
             // cache tweet
-            if (options.cachePath) {
+            if (options.cacheDirectory) {
                 try {
                     cachedTweets.push(liveTweet)
                     let tweetsJSON = JSON.stringify(cachedTweets, 2, 2)
@@ -64,7 +81,7 @@ async function getTweet(tweetId, options) {
             }
            
             // build
-            return buildTweet(liveTweet)
+            return buildTweet(liveTweet, options)
 
         } catch (error) {
             // unhappy path - continue to other fallbacks
@@ -84,7 +101,7 @@ async function getTweet(tweetId, options) {
     return htmlTweet
 }
 
-function buildTweet(tweet) {
+async function buildTweet(tweet, options) {
 
     let { body, images } = getTweetContents(tweet)
 
@@ -117,7 +134,16 @@ function buildTweet(tweet) {
   </div>
 </blockquote>`
 
-    return htmlTweet
+    // minify before returning
+    let htmlMin = minHtml(htmlTweet)
+
+    // add css if requested
+    if (options.useInlineStyles) {
+        let styleHtml = await getStyles()
+        htmlMin =  styleHtml + htmlMin
+    }
+    
+    return htmlMin
 }
 
 function getTweetContents(tweet) {
@@ -127,7 +153,7 @@ function getTweetContents(tweet) {
     let images = []
 
     // hashtags
-    for (hashtag of tweet.entities.hashtags) {
+    for (hashtag of tweet.entities.hashtags || []) {
         let { startPos, endPos, len } = getIndexPos(hashtag.indices)
 
         let oldText = htmlText.substr(startPos, len)
@@ -137,7 +163,7 @@ function getTweetContents(tweet) {
     }
 
     // users
-    for (user of tweet.entities.user_mentions) {
+    for (user of tweet.entities.user_mentions || []) {
         let { startPos, endPos, len } = getIndexPos(user.indices)
 
         let oldText = htmlText.substr(startPos, len)
@@ -147,7 +173,7 @@ function getTweetContents(tweet) {
     }
 
     // urls
-    for (url of tweet.entities.urls) {
+    for (url of tweet.entities.urls || []) {
         let { startPos, endPos, len } = getIndexPos(url.indices)
 
         let oldText = htmlText.substr(startPos, len)
@@ -157,7 +183,7 @@ function getTweetContents(tweet) {
     }
 
     // media
-    for (media of tweet.entities.media) {
+    for (media of tweet.entities.media || []) {
         let { startPos, endPos, len } = getIndexPos(media.indices)
 
         let oldText = htmlText.substr(startPos, len)

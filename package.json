@@ -1,6 +1,6 @@
 {
   "name": "eleventy-plugin-embed-tweet",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "publishConfig": {
     "access": "public"
   },
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "html-minifier": "^4.0.0",
     "moment": "^2.23.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.5"
