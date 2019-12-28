@@ -27,7 +27,7 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@11ty/eleventy": ">=0.9.1"
+    "@11ty/eleventy": ">=0.10.0-beta.1"
   },
   "dependencies": {
     "dotenv": "^8.2.0",

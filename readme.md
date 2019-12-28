@@ -13,11 +13,13 @@ Requires signing up for free [twitter developer account](https://developer.twitt
 
 ## Usage
 
-At it's simplest, you should just be able to drop in this nunjucks shortcode with a tweet ID which will deliver all the necessary html to embed (must be passed as a string because long numbers will truncate)
+Embed a tweet anywhere you can use nunjucks templates using a shortcode with the tweet id like this:
 
 ```js
 {% tweet "1188837207206977536" %}
 ```
+
+> **Note**: ID must be passed as a string because [long numbers will truncate in JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER))
 
 ### Demo
 
@@ -34,7 +36,7 @@ Demo project available on github at [KyleMit/eleventy-plugin-embed-tweet-demo](h
 
 ## Setting .ENV variables
 
-Create a file named `.env` at the project root - it contains keys so it's excluded by the `.gitignore` so each person will have to manually create their own
+Once you sign up for a twitter account, you'll need to create a file named `.env` at the project root - it contains keys so it's excluded by the `.gitignore` so each person will have to manually create their own:
 
 ```env
 TOKEN=********
@@ -43,9 +45,13 @@ CONSUMER_KEY=********
 CONSUMER_SECRET=********
 ```
 
+You'll also have to add the environment variables on your build server
+
 ## Todo
 
 * [ ] Destructure API JSON before caching - only store info we care about
+* [ ] Cache profile and media images
 * [ ] Much better docs
 * [ ] Figure out more consistent CSS structure
-* [ ] Cache profile and media images
+* [ ] Handle `<br>` elements
+* [ ] Automate `npm publish`

@@ -1,17 +1,12 @@
-var twitter = require("./TinyTwitter")
+var twitter = require("./twitter")
 
 module.exports = {
     initArguments: {},
-    configFunction: function(eleventyConfig, options = {}) {
-
-        if(typeof options.cacheDirectory === "undefined") {
-            options.cacheDirectory = "";
-        }
-        if(typeof options.useInlineStyles === "undefined") {
-            options.useInlineStyles = true;
-        }
+    configFunction: function(eleventyConfig, {cacheDirectory = "", useInlineStyles = true} = {}) {
+        // combine destructured option params
+        let options = {cacheDirectory, useInlineStyles}
         
-        // added in 0.9.1
+        // added in 0.10.0
         eleventyConfig.addNunjucksAsyncShortcode("tweet", async(tweetId) => {
             return await twitter.getTweet(tweetId, options)
         });
