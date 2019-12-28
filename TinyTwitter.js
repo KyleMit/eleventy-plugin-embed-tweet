@@ -14,13 +14,8 @@ async function getStyles() {
     let stylePath = path.join(moduleDir, "/tweet.css")
 
     let styles = await fs.readFile(stylePath)
-
-    let styleTag = `<style type='text/css'>${styles}</style>`
-
-    // minify before returning
-    let minStyles = minHtml(styleTag)
     
-    return minStyles
+    return styles
 }
 
 
@@ -134,15 +129,17 @@ async function buildTweet(tweet, options) {
   </div>
 </blockquote>`
 
-    // minify before returning
-    let htmlMin = minHtml(htmlTweet)
 
     // add css if requested
     if (options.useInlineStyles) {
-        let styleHtml = await getStyles()
-        htmlMin =  styleHtml + htmlMin
+        let styles = await getStyles()
+        htmlTweet =  `<style type='text/css'>${styles}</style>` + htmlTweet
     }
-    
+
+    // minify before returning
+    let htmlMin = minHtml(htmlTweet)
+
+
     return htmlMin
 }
 
