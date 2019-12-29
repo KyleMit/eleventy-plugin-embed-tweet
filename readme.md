@@ -133,21 +133,21 @@ The rough structure of the html returned by this plugin looks like this:
 
 Relying on an external, authenticated API to build your site has some tradeoffs:
 
-* Build will fail if API is down (fire at twitter)
-* Build will fail if you're offline (on a train)
+* The Build will fail if API is down (twitter on fire)
+* The Build will fail if you're offline (on a train)
 * People who clone the repo will need to sign up for their own API keys in order to do a full build
-* Increases build times with multiple repetitive calls (especially during debugging)
-* Increases reliance on API over long term
+* Increases build times with repetitive calls (especially during debugging)
+* Increases reliance on API access over long term
 
 To address these tradeoffs, this plugin can cache API calls locally which you can periodically commit to your repository.
 
-To enable, you need to pass a cacheDirctory path relative to your project root where you'd like to have data saved:
+To enable, you can pass a `cacheDirctory` path relative to your project root where you'd like to have data saved:
 
 ```js
-eleventyConfig.addPlugin(pluginEmbedTweet, {cacheDirectory: './tweets'});
+eleventyConfig.addPlugin(pluginEmbedTweet, {cacheDirectory: 'tweets'});
 ```
 
-Because this directory will be updated during build time, you must add a [`.eleventyignore`](https://www.11ty.dev/docs/ignores/) with the directories name, otherwise `eleventy --serve` can get stuck in an infinite loop when it detects changes and tries to rebuild the site during the build.
+Because this directory will be updated during build time, you **must add a [`.eleventyignore`](https://www.11ty.dev/docs/ignores/)** with the directories name, otherwise `eleventy --serve` can get stuck in an infinite loop when it detects changes and tries to rebuild the site during the build.
 
 **File**: `.eleventyignore`
 
@@ -155,4 +155,39 @@ Because this directory will be updated during build time, you must add a [`.elev
 tweets/
 ```
 
-I'd recommend periodically committing this file - the data should be largely unchanged as long as you've captured a new tweet, but the `favorites_count` may want to get refreshed over time.
+I'd recommend periodically committing this file. The only data that'll change over time is the `favorites_count`, but otherwise you can have a relatively shelf stable set of data in your repository
+
+If you'd like to guarantee that the build server is always getting the latest data for `favorites_count`, you can set `CACHE_BUST=true` in your build environment's variables or include in your scripts in you `package.json` like this:
+
+```json
+"scripts": {
+    "build": "npx eleventy",
+    "serve": "npx eleventy --serve",
+    "full-build": "set CACHE_BUST=true && npx eleventy",
+    "clear-cache": "rm -rf tweets"
+}
+```
+
+## Performance
+
+Static site generators work hard to bake in performance and do as much work ahead of time as possible.
+
+Which is why it's a bummer that the official way to embed tweets is to use the [publish.twitter.com](https://publish.twitter.com/#) which looks like this:
+
+```html
+<blockquote class="twitter-tweet">
+  <p lang="en" dir="ltr">
+    Nobody:<br><br>
+    Software Marketing Page: &quot;Blazingly Fast&quot;
+  </p>
+  &mdash; Kyle Mitofsky (@KyleMitBTV)
+  <a href="https://twitter.com/KyleMitBTV/status/1188837207206977536">October 28, 2019</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+```
+
+And performs like this:
+
+![twitter network traffic](https://i.imgur.com/4SFqs4P.png)
+
+// TODO - include real performance metrics/deltas
