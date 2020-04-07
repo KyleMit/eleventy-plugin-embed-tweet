@@ -86,6 +86,7 @@ let pluginEmbedTweet = require("eleventy-plugin-embed-tweet")
 let tweetEmbedOptions = {
     cacheDirectory: '',    // default: ''
     useInlineStyles: true  // default: true
+    autoEmbed: false       // default: false
 }
 
 eleventyConfig.addPlugin(pluginEmbedTweet, tweetEmbedOptions);
@@ -166,6 +167,26 @@ If you'd like to guarantee that the build server is always getting the latest da
     "full-build": "set CACHE_BUST=true && npx eleventy",
     "clear-cache": "rm -rf tweets"
 }
+```
+
+#### `autoEmbed`
+
+This configuration option, if set to `true`, adds a transform to Eleventy to find links to tweets that are "alone" in a paragraph, with the value equal to the URL, and auto embed them, replacing the link.
+
+For example:
+
+```html
+<p><a href="https://twitter.com/KyleMitBTV/status/1211079569245114371">https://twitter.com/KyleMitBTV/status/1211079569245114371</a></p>
+```
+
+Will be replaced by the embedded tweet.
+
+In the source Markdown, it only needs the tweet URL on one single line:
+
+```markdown
+
+https://twitter.com/KyleMitBTV/status/1211079569245114371
+
 ```
 
 ## Performance
