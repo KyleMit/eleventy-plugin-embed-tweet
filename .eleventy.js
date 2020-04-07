@@ -16,8 +16,8 @@ module.exports = {
         });
 
         if (options.autoEmbed) {
-            eleventyConfig.addTransform("autoEmbedTweets", (content, outputPath) => {
-                return content.replace(/<p><a href="(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))">\1<\/a><\/p>/g, (match, p1, p2) => `\n${twitter.getTweet(p2, options)}\n`);
+            eleventyConfig.addTransform("autoEmbedTweets", async (content, outputPath) => {
+                return await twitter.autoEmbedTweets(content, outputPath, options)
             });
         }
     }
