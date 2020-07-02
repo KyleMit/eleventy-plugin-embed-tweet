@@ -1,6 +1,7 @@
 require('dotenv').config()
 const request = require('request-promise')
 const { promises: fs } = require("fs");
+const syncFs = require('fs')
 
 
 module.exports = {
@@ -269,7 +270,7 @@ async function addTweetToCache(tweet, options) {
         // makre sure directory exists
         await fs.mkdir(cacheDir, {recursive: true})
 
-        await fs.writeFile(cachePath, tweetsJSON)
+        syncFs.writeFileSync(cachePath, tweetsJSON)
 
         console.log(`Writing ${cachePath}`)
     } catch (error) {
