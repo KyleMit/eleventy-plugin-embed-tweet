@@ -1,41 +1,41 @@
 {
-  "name": "eleventy-plugin-embed-tweet",
-  "version": "0.2.0",
-  "publishConfig": {
-    "access": "public"
-  },
-  "description": "A plugin for embedding tweets on the server side during build time",
-  "main": ".eleventy.js",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KyleMit/eleventy-plugin-embed-tweet.git"
-  },
-  "bugs": {
-    "url": "https://github.com/KyleMit/eleventy-plugin-embed-tweet/issues"
-  },
-  "homepage": "https://github.com/KyleMit/eleventy-plugin-embed-tweet#readme",
-  "keywords": [
-    "eleventy",
-    "eleventy-plugin",
-    "twitter"
-  ],
-  "author": {
-    "name": "Kyle Mitofsky",
-    "email": "kylemit@gmail.com",
-    "url": "http://kylemit.dev/"
-  },
-  "license": "MIT",
-  "peerDependencies": {
-    "@11ty/eleventy": ">=0.10.0-beta.1"
-  },
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "html-minifier": "^4.0.0",
-    "moment": "^2.23.0",
-    "nunjucks": "^3.2.1",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5",
-    "string-replace-async": "^1.2.1"
-  }
+    "name": "eleventy-plugin-embed-tweet",
+    "version": "0.3.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "description": "A plugin for embedding tweets on the server side during build time",
+    "main": ".eleventy.js",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/KyleMit/eleventy-plugin-embed-tweet.git"
+    },
+    "bugs": {
+        "url": "https://github.com/KyleMit/eleventy-plugin-embed-tweet/issues"
+    },
+    "homepage": "https://github.com/KyleMit/eleventy-plugin-embed-tweet#readme",
+    "keywords": [
+        "eleventy",
+        "eleventy-plugin",
+        "twitter"
+    ],
+    "author": {
+        "name": "Kyle Mitofsky",
+        "email": "kylemit@gmail.com",
+        "url": "http://kylemit.dev/"
+    },
+    "license": "MIT",
+    "peerDependencies": {
+        "@11ty/eleventy": ">=0.10.0-beta.1"
+    },
+    "dependencies": {
+        "dotenv": "^8.2.0",
+        "html-minifier": "^4.0.0",
+        "moment": "^2.23.0",
+        "nunjucks": "^3.2.1",
+        "request": "^2.88.0",
+        "request-promise": "^4.2.5",
+        "string-replace-async": "^1.2.1"
+    }
 }
