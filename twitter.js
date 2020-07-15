@@ -6,7 +6,8 @@ const syncFs = require('fs')
 
 module.exports = {
     getTweet,
-    getStyles
+    getStyles,
+    autoEmbedTweets
 }
 
 async function getTweet(tweetId, options) {
@@ -303,3 +304,14 @@ async function getStyles() {
     return styles
 }
 
+
+// Auto embed tweets
+const asyncReplace = require('string-replace-async')
+
+async function autoEmbedTweets(content, outputPath, options) {
+    return await asyncReplace(
+        content,
+        /<p><a href="(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))">\1<\/a><\/p>/g,
+        async (match, p1, p2) => await getTweet(p2, options)
+    )
+}
