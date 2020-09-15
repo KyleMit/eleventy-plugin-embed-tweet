@@ -311,7 +311,7 @@ const asyncReplace = require('string-replace-async')
 async function autoEmbedTweets(content, outputPath, options) {
     return await asyncReplace(
         content,
-        /<p><a href="(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))">\1<\/a><\/p>/g,
-        async (match, p1, p2) => await getTweet(p2, options)
+        /<p>(<a href=")?(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))(">\2<\/a>)?<\/p>/g,
+        async (match, p1, p2, p3) => await getTweet(p3, options)
     )
 }
