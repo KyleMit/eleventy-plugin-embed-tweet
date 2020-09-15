@@ -11,14 +11,14 @@ module.exports = {
 }
 
 async function getTweet(tweetId, options) {
-    
+
     // if we using cache and not cache busting, check there first
     if (options.cacheDirectory && !process.env.CACHE_BUST) {
         let cachedTweets = await getCachedTweets(options);
         let cachedTweet = cachedTweets[tweetId]
-       
+
         // if we have a cached tweet, use that
-        if (cachedTweet ) {
+        if (cachedTweet) {
             return formatTweet(cachedTweet, options)
         }
         // else continue on
@@ -43,12 +43,12 @@ async function getTweet(tweetId, options) {
     } else {
         console.warn("Remeber to add your twitter credentials as environement variables")
         console.warn("Read More at https://github.com/KyleMit/eleventy-plugin-embed-tweet#setting-env-variables")
-        // else continue on
+            // else continue on
     }
 
     // finally fallback to client-side injection
     var htmlTweet =
-        `<blockquote class="twitter-tweet"><a href="https://twitter.com/user/status/${tweetId}"></a></blockquote>` + 
+        `<blockquote class="twitter-tweet"><a href="https://twitter.com/user/status/${tweetId}"></a></blockquote>` +
         `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`
 
     return htmlTweet
@@ -56,10 +56,10 @@ async function getTweet(tweetId, options) {
 
 /* Twitter API Call */
 function hasAuth() {
-    return process.env.TOKEN && 
-           process.env.TOKEN_SECRET && 
-           process.env.CONSUMER_KEY && 
-           process.env.CONSUMER_SECRET
+    return process.env.TOKEN &&
+        process.env.TOKEN_SECRET &&
+        process.env.CONSUMER_KEY &&
+        process.env.CONSUMER_SECRET
 }
 
 function getAuth() {
@@ -97,15 +97,15 @@ function processTweet(tweet) {
     let images = getTweetImages(tweet)
     let created_at = getTweetDates(tweet)
     let htmlText = getTweetTextHtml(tweet)
-    
+
     // destructure only properties we care about
-    let {id_str, favorite_count } = tweet
-    let {name, screen_name, profile_image_url_https } = tweet.user
-    let user = {name, screen_name, profile_image_url_https }
+    let { id_str, favorite_count } = tweet
+    let { name, screen_name, profile_image_url_https } = tweet.user
+    let user = { name, screen_name, profile_image_url_https }
 
     // build tweet with properties we want
     let tweetViewModel = {
-        id_str, 
+        id_str,
         htmlText,
         images,
         favorite_count,
@@ -200,7 +200,7 @@ function renderTweet(tweet) {
     // configure nunjucks
     let nunjucks = require("nunjucks")
     nunjucks.configure(moduleDir, { autoescape: true });
-    
+
     // render with nunjucks
     let htmlTweet = nunjucks.render("tweet.njk", tweet);
 
@@ -263,12 +263,12 @@ async function addTweetToCache(tweet, options) {
 
         // build new cache string
         let tweetsJSON = JSON.stringify(cachedTweets, 2, 2)
-        
+
         let cachePath = getCachedTweetPath(options)
         let cacheDir = require("path").dirname(cachePath)
 
         // makre sure directory exists
-        await fs.mkdir(cacheDir, {recursive: true})
+        await fs.mkdir(cacheDir, { recursive: true })
 
         syncFs.writeFileSync(cachePath, tweetsJSON)
 
@@ -282,9 +282,9 @@ function getCachedTweetPath(options) {
     let path = require("path")
 
     // get directory for main thread
-    let appPath = require.main.filename       // C:\user\github\app\node_modules\@11ty\eleventy\cmd.js
+    let appPath = require.main.filename // C:\user\github\app\node_modules\@11ty\eleventy\cmd.js
     let pos = appPath.indexOf("node_modules")
-    let appRoot = appPath.substr(0, pos)      // C:\user\github\app\
+    let appRoot = appPath.substr(0, pos) // C:\user\github\app\
 
     // build cache file path
     let cachePath = path.join(appRoot, options.cacheDirectory, "tweets.json")
@@ -309,9 +309,9 @@ async function getStyles() {
 const asyncReplace = require('string-replace-async')
 
 async function autoEmbedTweets(content, outputPath, options) {
-    return await asyncReplace(
-        content,
-        /<p>(<a href=")?(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))(">\2<\/a>)?<\/p>/g,
-        async (match, p1, p2, p3) => await getTweet(p3, options)
-    )
+    // https://regexr.com/5c39d
+    let findTweets = /<p>(<a href=")?(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))(">\2<\/a>)?<\/p>/g
+    return await asyncReplace(content, findTweets, async(match, p1, p2, p3) => {
+        return await getTweet(p3, options)
+    })
 }
