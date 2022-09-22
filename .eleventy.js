@@ -1,4 +1,5 @@
-var twitter = require("./twitter")
+const pkg = require("./package.json");
+const twitter = require("./twitter")
 
 module.exports = {
     initArguments: {},
@@ -6,6 +7,13 @@ module.exports = {
         // combine destructured option params
         let options = {cacheDirectory, useInlineStyles, autoEmbed}
         
+        try {
+            eleventyConfig.versionCheck(pkg["11ty"].compatibility);
+        } catch (e) {
+            console.log(
+              `WARN: Eleventy Plugin (${pkg.name}) Compatibility: ${e.message}`
+            );
+        }
         // added in 0.10.0
         eleventyConfig.addNunjucksAsyncShortcode("tweet", async(tweetId) => {
             return await twitter.getTweet(tweetId, options)
