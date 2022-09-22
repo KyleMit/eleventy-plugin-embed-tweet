@@ -26,9 +26,6 @@
         "url": "http://kylemit.dev/"
     },
     "license": "MIT",
-    "peerDependencies": {
-        "@11ty/eleventy": ">=0.10.0-beta.1"
-    },
     "dependencies": {
         "dotenv": "^8.2.0",
         "html-minifier": "^4.0.0",
@@ -37,5 +34,8 @@
         "request": "^2.88.0",
         "request-promise": "^4.2.5",
         "string-replace-async": "^1.2.1"
+    },
+    "11ty": {
+        "compatibility": ">=0.10.0"
     }
 }
