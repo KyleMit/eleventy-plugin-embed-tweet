@@ -309,8 +309,8 @@ async function getStyles() {
 const asyncReplace = require('string-replace-async')
 
 async function autoEmbedTweets(content, outputPath, options) {
-    // https://regexr.com/5c39d
-    let findTweets = /<p>(<a href=")?(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))(">\2<\/a>)?<\/p>/g
+    // https://regexr.com/6v8ih
+    let findTweets = /<p ?.*>(<a href=")?(https:\/\/twitter.com\/[^/]+\/status\/([0-9]+))(">\2<\/a>)?<\/p>/g
     return await asyncReplace(content, findTweets, async(match, p1, p2, p3) => {
         return await getTweet(p3, options)
     })
