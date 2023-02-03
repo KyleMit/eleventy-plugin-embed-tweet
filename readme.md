@@ -20,7 +20,7 @@ module.exports = function(eleventyConfig) {
 
 ## Requirements
 
-Requires signing up for free [twitter developer API account](https://developer.twitter.com/en/apply-for-access) - see docs for walkthrough
+Requires signing up for [~~free~~](https://twitter.com/TwitterDev/status/1621026986784337922?s=20&t=wOM6Oe0n-JGSIpbXheaYHg) twitter [developer API account](https://developer.twitter.com/en/apply-for-access) - see docs for walkthrough
 
 This plugin relies on making live API calls during build by using async shortcodes which were added in [**Eleventy v0.10.0**](https://github.com/11ty/eleventy/releases/tag/v0.10.0-beta.1) so it's listed as a peer dependency
 
